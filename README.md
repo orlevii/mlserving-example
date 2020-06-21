@@ -1,2 +1,2 @@
-# mest-example
+# Mest Example
 Using mest for serving models
