@@ -1,11 +1,7 @@
-from minio import Minio
+from utils.model_version import ModelVersion
 
-from config import config
+model_version = ModelVersion.find_or_create('iris_classifier')
 
-minioClient = Minio(f'{config.MINIO_HOST}:{config.MINIO_PORT}',
-                    access_key=config.MINIO_ACCESS_KEY,
-                    secret_key=config.MINIO_SECRET_KEY,
-                    secure=False)
+model_version.bump('./model_artifacts')
 
-for obj in minioClient.list_objects(config.ML_BUCKET):
-    print(obj.object_name)
+model_version.get('./test')
