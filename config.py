@@ -11,6 +11,7 @@ class Config:
     MINIO_ACCESS_KEY = os.getenv('MINIO_ACCESS_KEY')
     MINIO_SECRET_KEY = os.getenv('MINIO_SECRET_KEY')
     ML_BUCKET = 'ml-models'
+    LOCAL_MODEL_DIR = 'model_artifacts'
 
 
 config = Config()
