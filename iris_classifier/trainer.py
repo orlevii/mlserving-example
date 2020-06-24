@@ -8,7 +8,8 @@ from sklearn.preprocessing import MinMaxScaler
 
 from config import config
 
-FEATURES_TO_NORMALIZE = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)']
+FEATURES_NAMES = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+FEATURES_TO_NORMALIZE = ['sepal_length', 'sepal_width', 'petal_length']
 
 MODEL_FILE_NAME = 'model.pkl'
 NORMALIZER_FILE_NAME = 'normalizer.pkl'
@@ -30,7 +31,7 @@ class ModelTrainer:
 
     def prepare_data(self):
         dataset = datasets.load_iris()
-        self.train_df = pd.DataFrame(dataset.data, columns=dataset.feature_names)
+        self.train_df = pd.DataFrame(dataset.data, columns=FEATURES_NAMES)
         self.train_df[FEATURES_TO_NORMALIZE] = self.normalizer.fit_transform(self.train_df[FEATURES_TO_NORMALIZE])
         self.target = dataset.target
 

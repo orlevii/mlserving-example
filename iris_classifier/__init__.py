@@ -1,1 +1,1 @@
-from .train import ModelTrainer
+from .trainer import ModelTrainer

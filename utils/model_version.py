@@ -30,8 +30,12 @@ class ModelVersion:
         :param artifacts_path: Local artifacts path to download to
         :return:
         """
-        to_download = os.path.join(self.model_name, 'versions', str(self.version))
+        to_download = self.remote_directory
         minio_client.download_directory(config.ML_BUCKET, to_download, artifacts_path)
+
+    @property
+    def remote_directory(self):
+        return os.path.join(self.model_name, 'versions', str(self.version))
 
     @classmethod
     def find_or_create(cls, model_name):
