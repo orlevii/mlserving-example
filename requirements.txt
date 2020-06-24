@@ -4,3 +4,4 @@ python-dotenv==0.13.*
 scikit-learn==0.23.*
 pandas==1.0.*
 joblib==0.*
+gunicorn[gevent]
