@@ -1,8 +1,13 @@
 import os
+import sys
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# minio access from non-linux
+if 'linux' not in sys.platform.lower():
+    os.environ['MINIO_HOST'] = '127.0.0.1'
 
 
 class Config:
