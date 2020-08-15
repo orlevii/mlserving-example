@@ -1,10 +1,11 @@
 import os
 
 import joblib
-import pandas as pd
+import numpy as np
 from mest.predictors import RESTPredictor
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.utils import check_array
 
 from config import config
 from .trainer import FEATURES_TO_NORMALIZE, FEATURES_NAMES, MODEL_FILE_NAME, NORMALIZER_FILE_NAME
@@ -28,16 +29,18 @@ class IrisClassifierPredictor(RESTPredictor):
         self.normalizer: MinMaxScaler = joblib.load(normalizer_path)
 
     def pre_process(self, features: dict, req):
+        """
+        Note - the pre-processing is not using pandas DataFrame for performance reasons.
+        Using numpy might require more code, but the performance is MUCH faster.
+        """
         for feature_name, value in features.items():
             features[feature_name] = [value]
 
-        # Create dataframe, select the features in the right order.
-        features_df = pd.DataFrame(features)[FEATURES_NAMES]
-        self.normalize_features(features_df)
+        self.normalize_features(features)
+        # Sort features in the right order
+        return check_array([features[name] for name in FEATURES_NAMES]).transpose()
 
-        return features_df
-
-    def predict(self, processed_data: pd.DataFrame, req):
+    def predict(self, processed_data: np.ndarray, req):
         return self.classifier.predict_proba(processed_data)[0]
 
     def post_process(self, prediction, req) -> dict:
@@ -49,6 +52,17 @@ class IrisClassifierPredictor(RESTPredictor):
             }
         }
 
-    def normalize_features(self, features: pd.DataFrame):
-        # Use normalizer.transform(...) on the features we want to normalize
-        features[FEATURES_TO_NORMALIZE] = self.normalizer.transform(features[FEATURES_TO_NORMALIZE])
+    def normalize_features(self, features: dict):
+        # Get features to normalize
+        matrix = [features[feature_name] for feature_name in FEATURES_TO_NORMALIZE]
+        matrix = check_array(matrix).transpose()
+
+        # Normalize
+        normalized_matrix = self.normalizer.transform(matrix).transpose()
+
+        # Update the features dict
+        for i in range(len(FEATURES_TO_NORMALIZE)):
+            feature_name = FEATURES_TO_NORMALIZE[i]
+            vector = normalized_matrix[i]
+
+            features[feature_name] = vector
