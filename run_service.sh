@@ -1,5 +1,5 @@
-## Download models from minio
-python download_models.py
+## Download latest models from minio
+# python download_models.py
 
 ## Run the inference service
 python main_mest.py

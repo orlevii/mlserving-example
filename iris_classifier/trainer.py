@@ -36,7 +36,10 @@ class ModelTrainer:
         self.target = dataset.target
 
     def fit(self):
-        self.model = LogisticRegression(penalty=self.penalty, tol=self.tol, C=self.C, max_iter=self.max_iter)
+        self.model = LogisticRegression(penalty=self.penalty,
+                                        tol=self.tol,
+                                        C=self.C,
+                                        max_iter=self.max_iter)
         self.model.fit(self.train_df, self.target)
 
     def eval(self):
