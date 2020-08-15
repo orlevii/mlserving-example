@@ -16,15 +16,15 @@ NORMALIZER_FILE_NAME = 'normalizer.pkl'
 
 
 class ModelTrainer:
-    def __init__(self, penalty='l2', tol=1e-4, C=1e5, max_iter=100):
+    def __init__(self, penalty='l2', tol=1e-4, C=1.0, max_iter=100):
         # Model artifacts
         self.model = None
         self.normalizer = MinMaxScaler()
         # Hyper params
-        self.penalty = 'l2'
-        self.tol = 1e-4
-        self.C = 1.0
-        self.max_iter = 100
+        self.penalty = penalty
+        self.tol = tol
+        self.C = C
+        self.max_iter = max_iter
         # Data
         self.train_df = None
         self.target = None

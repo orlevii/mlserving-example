@@ -1,4 +1,4 @@
-git+ssh://git@github.com/orlevi111/mest@reinvnet#egg=mest[falcon]
+git+ssh://git@github.com/orlevi111/mest@reinvnet
 minio==5.0.*
 python-dotenv==0.13.*
 scikit-learn==0.23.*

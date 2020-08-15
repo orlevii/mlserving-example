@@ -1,14 +1,13 @@
 from mest import Mest
 
-from iris_classifier.model import IrisClassifierModel
+from iris_classifier.predictor import IrisClassifierPredictor
 
-mest = Mest()
+app = Mest()
 
-mest.add_inference_handler(IrisClassifierModel(), '/api/v1/predict')
-app = mest.app
+app.add_inference_handler('/api/v1/predict', IrisClassifierPredictor())
 
 if __name__ == '__main__':
-    mest.run()
+    app.run()
 
 """
 curl -X POST http://127.0.0.1:5000/api/v1/predict \

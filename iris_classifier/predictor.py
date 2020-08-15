@@ -1,13 +1,16 @@
-from typing import Any
+import os
 
-from mest.api import Response
-from mest.predictors import BasePredictor
-from sklearn.utils import check_array
+import joblib
+import pandas as pd
+from mest.predictors import RESTPredictor
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import MinMaxScaler
 
-from .trainer import FEATURES_TO_NORMALIZE, FEATURES_NAMES
+from config import config
+from .trainer import FEATURES_TO_NORMALIZE, FEATURES_NAMES, MODEL_FILE_NAME, NORMALIZER_FILE_NAME
 
 
-class IrisClassifierPredictor(BasePredictor):
+class IrisClassifierPredictor(RESTPredictor):
     REQUEST_SCHEMA = {
         'sepal_length': {'type': 'float', 'required': True},
         'sepal_width': {'type': 'float', 'required': True},
@@ -15,41 +18,37 @@ class IrisClassifierPredictor(BasePredictor):
         'petal_width': {'type': 'float', 'required': True},
     }
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self):
+        # Load classifier
+        classifier_path = os.path.join(config.LOCAL_MODEL_DIR, MODEL_FILE_NAME)
+        self.classifier: LogisticRegression = joblib.load(classifier_path)
 
-    def pre_process(self, features: dict):
-        # make a vector from each value
+        # Load normalizer
+        normalizer_path = os.path.join(config.LOCAL_MODEL_DIR, NORMALIZER_FILE_NAME)
+        self.normalizer: MinMaxScaler = joblib.load(normalizer_path)
+
+    def pre_process(self, features: dict, req):
         for feature_name, value in features.items():
             features[feature_name] = [value]
 
-        self.normalize_features(features)
+        # Create dataframe, select the features in the right order.
+        features_df = pd.DataFrame(features)[FEATURES_NAMES]
+        self.normalize_features(features_df)
 
-        # Sort features in the right order
-        return check_array([features[name] for name in FEATURES_NAMES]).transpose()
+        return features_df
 
-    def infer(self, processed_data: Any):
-        return self.model.classifier.predict_proba(processed_data)[0]
+    def predict(self, processed_data: pd.DataFrame, req):
+        return self.classifier.predict_proba(processed_data)[0]
 
-    def post_process(self, prediction) -> Response:
-        return Response(
-            data={
-                'probabilities': {
-                    'setosa': prediction[0],
-                    'versicolour': prediction[1],
-                    'virginica': prediction[2]
-                }
+    def post_process(self, prediction, req) -> dict:
+        return {
+            'probabilities': {
+                'setosa': prediction[0],
+                'versicolour': prediction[1],
+                'virginica': prediction[2]
             }
-        )
+        }
 
-    def normalize_features(self, features: dict):
-        matrix = [features[feature_name] for feature_name in FEATURES_TO_NORMALIZE]
-        matrix = check_array(matrix).transpose()
-
-        normalized_matrix = self.model.normalizer.transform(matrix).transpose()
-
-        for i in range(len(FEATURES_TO_NORMALIZE)):
-            feature_name = FEATURES_TO_NORMALIZE[i]
-            vector = normalized_matrix[i]
-
-            features[feature_name] = vector
+    def normalize_features(self, features: pd.DataFrame):
+        # Use normalizer.transform(...) on the features we want to normalize
+        features[FEATURES_TO_NORMALIZE] = self.normalizer.transform(features[FEATURES_TO_NORMALIZE])
