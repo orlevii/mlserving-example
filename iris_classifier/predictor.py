@@ -2,6 +2,7 @@ import os
 
 import joblib
 import numpy as np
+from mest.api import request_schema
 from mest.predictors import RESTPredictor
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import MinMaxScaler
@@ -10,14 +11,16 @@ from sklearn.utils import check_array
 from config import config
 from .trainer import FEATURES_TO_NORMALIZE, FEATURES_NAMES, MODEL_FILE_NAME, NORMALIZER_FILE_NAME
 
+REQUEST_SCHEMA = {
+    'sepal_length': 'float',
+    'sepal_width': 'float',
+    'petal_length': 'float',
+    'petal_width': 'float',
+}
 
+
+@request_schema(REQUEST_SCHEMA)
 class IrisClassifierPredictor(RESTPredictor):
-    REQUEST_SCHEMA = {
-        'sepal_length': {'type': 'float', 'required': True},
-        'sepal_width': {'type': 'float', 'required': True},
-        'petal_length': {'type': 'float', 'required': True},
-        'petal_width': {'type': 'float', 'required': True},
-    }
 
     def __init__(self):
         # Load classifier
