@@ -2,8 +2,8 @@ import os
 
 import joblib
 import numpy as np
-from mest.api import request_schema
-from mest.predictors import RESTPredictor
+from mlserving.api import request_schema
+from mlserving.predictors import RESTPredictor
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import check_array

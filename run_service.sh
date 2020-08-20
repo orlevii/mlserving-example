@@ -2,8 +2,8 @@
 # python download_models.py
 
 ## Run the inference service
-python main_mest.py
+python mlserving_main.py
 
 ## You can also run the service on gunicorn:
 ## RUN: pip install gunicorn[gevent]
-# gunicorn -b 0.0.0.0:5000 -k gevent -w 4 main_mest:app
+# gunicorn -b 0.0.0.0:5000 -k gevent -w 4 mlserving_main:app

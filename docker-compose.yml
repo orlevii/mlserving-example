@@ -10,7 +10,7 @@ services:
       MINIO_SECRET_KEY: $MINIO_SECRET_KEY
     command: server /data
     networks:
-      mest_example:
+      mlserving_example:
         ipv4_address: $MINIO_HOST
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -19,7 +19,7 @@ services:
       retries: 3
 
 networks:
-  mest_example:
+  mlserving_example:
     driver: bridge
     ipam:
       config:
