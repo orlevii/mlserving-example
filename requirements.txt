@@ -1,4 +1,4 @@
-git+ssh://git@github.com/orlevii/mlserving@reinvnet
+mlserving==0.*
 minio==5.0.*
 python-dotenv==0.13.*
 scikit-learn==0.23.*
