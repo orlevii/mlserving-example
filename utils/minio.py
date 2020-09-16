@@ -10,7 +10,7 @@ from config import config
 
 class _MinioClient:
     def __init__(self):
-        self.client = Minio(config.MINIO_HOST,
+        self.client = Minio(config.MINIO_ENDPOINT,
                             access_key=config.MINIO_ACCESS_KEY,
                             secret_key=config.MINIO_SECRET_KEY,
                             secure=config.MINIO_SECURE)
