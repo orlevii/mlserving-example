@@ -17,7 +17,7 @@ class Config:
     MINIO_ACCESS_KEY = os.getenv('MINIO_ACCESS_KEY')
     MINIO_SECRET_KEY = os.getenv('MINIO_SECRET_KEY')
     MINIO_SECURE = os.getenv('SECURE', 'false') == 'true'
-    ML_BUCKET = os.getenv('MINIO_BUCKET', 'ml-models')
+    ML_BUCKET = os.getenv('MINIO_BUCKET')
     LOCAL_MODEL_DIR = 'model_artifacts'
     MODEL_NAME = 'iris_classifier'
 
