@@ -10,7 +10,7 @@ if __name__ == '__main__':
     app.run()
 
 """
-curl -X POST http://127.0.0.1:5000/api/v1/predict \
+curl -X POST http://mlserving-example.herokuapp.com/api/v1/predict \
 -H 'Content-Type: application/json' -d '{
     "sepal_length": 0.1,
     "sepal_width": 0.2,

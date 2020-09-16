@@ -1,0 +1,7 @@
+build:
+  docker:
+    web: Dockerfile
+run:
+  web: |
+    python download_models.py
+    gunicorn -b 0.0.0.0:$PORT -k gevent -w 4 mlserving_main:app --log-file -
