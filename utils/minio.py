@@ -10,10 +10,10 @@ from config import config
 
 class _MinioClient:
     def __init__(self):
-        self.client = Minio(f'{config.MINIO_HOST}:{config.MINIO_PORT}',
+        self.client = Minio(config.MINIO_HOST,
                             access_key=config.MINIO_ACCESS_KEY,
                             secret_key=config.MINIO_SECRET_KEY,
-                            secure=False)
+                            secure=config.MINIO_SECURE)
 
     def object_exists(self, bucket, obj_path) -> bool:
         try:
